@@ -8,7 +8,7 @@ use POE::Component::Hailo;
 use POE::Component::IRC::Common qw(l_irc matches_mask_array irc_to_utf8 strip_color strip_formatting);
 use POE::Component::IRC::Plugin qw(PCI_EAT_NONE);
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub new {
     my ($package, %args) = @_;
@@ -315,5 +315,9 @@ down the old brain if it was instantiated by the plugin itself.
 =head1 AUTHOR
 
 Hinrik E<Ouml>rn SigurE<eth>sson, hinrik.sig@gmail.com
+
+This distribution is based on
+L<POE::Component::IRC::Plugin::MegaHAL|POE::Component::IRC::Plugin::MegaHAL>
+by the same author.
 
 =cut

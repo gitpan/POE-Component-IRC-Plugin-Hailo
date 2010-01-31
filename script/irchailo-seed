@@ -6,7 +6,7 @@ use Getopt::Long qw(:config autohelp);
 use POE::Component::IRC::Common qw(l_irc strip_color strip_formatting irc_to_utf8);
 use Pod::Usage;
 
-my $VERSION = '0.02';
+my $VERSION = '0.03';
 
 GetOptions(
     'f|format=s'       => \(my $format = ''),
@@ -98,7 +98,7 @@ prefixed with '!'.
 Example:
 
   # convert irssi log, stripping "MyBot: " prefix and ignoring lines with URLs
-  cat ~/logs/\#chan.log | irchailo-seed -f irssi -b MyBot -r '\w+://\w' > megahal.trn
+  cat ~/logs/\#chan.log | irchailo-seed -f irssi -b MyBot -r '\w+://\w' > hailo.trn
 
 The C<--case> option controls the second parameter passed to C<l_irc>
 from L<POE::Component::IRC::Common|POE::Component::IRC::Common>. The default
