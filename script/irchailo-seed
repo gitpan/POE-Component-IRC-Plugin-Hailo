@@ -6,7 +6,7 @@ use Getopt::Long qw(:config autohelp);
 use POE::Component::IRC::Common qw(l_irc strip_color strip_formatting irc_to_utf8);
 use Pod::Usage;
 
-my $VERSION = '0.04';
+my $VERSION = '0.05';
 
 GetOptions(
     'f|format=s'       => \(my $format = ''),
@@ -42,7 +42,7 @@ LINE: while (my $line = <STDIN>) {
     my ($nick, $msg);
     if (($nick, $msg) = $line =~ /$privmsg/) {
         # PRIVMSG 
-        $msg =~ s/^\s*\Q$bot\E[:,;.!?~]?\s?//i if defined $bot;
+        $msg =~ s/^\s*\Q$bot\E[:,;.!?~]?\s//i if defined $bot;
     }
     elsif (($msg) = $line =~ /$action/) {
         # ACTION
