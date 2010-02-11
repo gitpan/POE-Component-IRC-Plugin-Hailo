@@ -8,7 +8,7 @@ use POE::Component::Hailo;
 use POE::Component::IRC::Common qw(l_irc matches_mask_array irc_to_utf8 strip_color strip_formatting);
 use POE::Component::IRC::Plugin qw(PCI_EAT_NONE);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub new {
     my ($package, %args) = @_;
@@ -111,7 +111,7 @@ sub _msg_handler {
     my $event = 'learn';
     my $nick = $self->{irc}->nick_name();
     if ($self->{Own_channel} && (l_irc($chan) eq l_irc($self->{Own_channel}))
-        || $type eq 'public' && $what =~ s/^\s*\Q$nick\E[:,;.!?~]?\s?//i
+        || $type eq 'public' && $what =~ s/^\s*\Q$nick\E[:,;.!?~]?\s//i
         || $self->{Talkative} && $what =~ /\Q$nick/i)
     {
         $event = 'learn_reply';
