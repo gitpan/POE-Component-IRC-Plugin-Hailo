@@ -8,7 +8,7 @@ use POE::Component::Hailo;
 use POE::Component::IRC::Common qw(l_irc matches_mask_array irc_to_utf8 strip_color strip_formatting);
 use POE::Component::IRC::Plugin qw(PCI_EAT_NONE);
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 sub new {
     my ($package, %args) = @_;
@@ -79,42 +79,52 @@ sub _sig_DIE {
 sub hailo_learn_replied {
     my ($self, $args, $context) = @_[OBJECT, ARG0, ARG1];
     my $reply = shift @$args;
+    $reply = "I don't know enough to answer you yet." if !defined $reply;
     
     $self->{irc}->yield($self->{Method} => $context->{_target}, $reply);
     return;
 }
 
 sub _ignoring_user {
-    my ($self, $user, $chan) = @_;
+    my ($self, $user) = @_;
     
     if ($self->{Ignore_masks}) {
         my $mapping = $self->{irc}->isupport('CASEMAPPING');
         return 1 if keys %{ matches_mask_array($self->{Ignore_masks}, [$user], $mapping) };
     }
 
-    # abuse protection
+    return;
+}
+
+sub _ignoring_abuser {
+    my ($self, $user, $chan) = @_;
+
     my $key = "$user $chan";
     my $last_time = delete $self->{abusers}->{$key};
     $self->{abusers}->{$key} = time;
+
     return 1 if $last_time && (time - $last_time < $self->{Abuse_interval});
-    
     return;
 }
 
 sub _msg_handler {
     my ($self, $kernel, $type, $user, $chan, $what) = @_[OBJECT, KERNEL, ARG0..$#_];
+    my $nick = $self->{irc}->nick_name();
 
-    return if $self->_ignoring_user($user, $chan);
+    return if $self->_ignoring_user($user);
     $what = _normalize_irc($what);
 
     # should we reply?
     my $event = 'learn';
-    my $nick = $self->{irc}->nick_name();
     if ($self->{Own_channel} && (l_irc($chan) eq l_irc($self->{Own_channel}))
         || $type eq 'public' && $what =~ s/^\s*\Q$nick\E[:,;.!?~]?\s//i
         || $self->{Talkative} && $what =~ /\Q$nick/i)
     {
         $event = 'learn_reply';
+    }
+
+    if ($event eq 'learn_reply' && $self->_ignoring_abuser($user, $chan)) {
+        $event = 'learn';
     }
 
     if ($self->{Ignore_regexes}) {
@@ -230,6 +240,9 @@ access to a L<Hailo|Hailo> conversation simulator.
  $irc->plugin_add('Hailo', POE::Component::IRC::Plugin::Hailo->new(
      Own_channel    => '#bot_chan',
      Ignore_regexes => [ qr{^\s*\w+://\S+\s*$} ], # ignore URL-only lines
+     Hailo_args => {
+         brain_resource => 'brain.sqlite',
+     },
  ));
  
  $irc->yield('connect');
@@ -244,10 +257,10 @@ It will talk back when addressed by channel members (and possibly in other
 situations, see L<C<new>|/"new">). An example:
 
  --> hailo_bot joins #channel
- <Someone> oh hi
+ <Someone> oh hi there
  <Other> hello there
- <Someone> hailo_bot: hi there
- <hailo_bot> oh hi
+ <Someone> hailo_bot: hi
+ <hailo_bot> oh hi there
 
 All NOTICEs are ignored, so if your other bots only issue NOTICEs like
 they should, they will be ignored automatically.
@@ -271,8 +284,7 @@ lying around. Useful if you want to use it with multiple IRC components.
 If this argument is not provided, the plugin will construct its own object.
 
 B<'Hailo_args'>, a hash reference containing arguments to pass to the
-constructor of a new L<POE::Component::Hailo|POE::Component::Hailo>
-object.
+constructor of a new L<Hailo|Hailo> object.
 
 B<'Own_channel'>, a channel where it will reply to all messages. The plugin
 will take care of joining the channel. It will part from it when the plugin
@@ -280,8 +292,8 @@ is removed from the pipeline. Defaults to none.
 
 B<'Abuse_interval'>, default is 60 (seconds), which means that user X in
 channel Y has to wait that long before addressing the bot in the same channel
-if he doesn't want to be ignored. Setting this to 0 effectively turns off
-abuse protection.
+if he wants to get a reply. Setting this to 0 effectively turns off abuse
+protection.
 
 B<'Talkative'>, when set to a true value, the bot will respond whenever
 someone mentions its name (in a PRIVMSG or CTCP ACTION (/me)). If false, it

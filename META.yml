@@ -1,0 +1,32 @@
+---
+abstract: 'A PoCo-IRC plugin which provides'
+author:
+  - 'Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>'
+build_requires:
+  ExtUtils::MakeMaker: 6.42
+  Test::More: 0
+  Test::Script: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.42
+distribution_type: module
+generated_by: 'Module::Install version 0.91'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: POE-Component-IRC-Plugin-Hailo
+no_index:
+  directory:
+    - inc
+    - t
+    - xt
+requires:
+  POE::Component::Hailo: 0
+  POE::Component::IRC: 6.22
+resources:
+  Ratings: http://cpanratings.perl.org/d/Hailo
+  bugtracker: http://github.com/hinrik/hailo/issues
+  homepage: http://search.cpan.org/dist/POE-Component-IRC-Plugin-Hailo
+  license: http://dev.perl.org/licenses/
+  repository: git://github.com/hinrik/poe-component-irc-plugin-hailo.git
+version: 0.06
