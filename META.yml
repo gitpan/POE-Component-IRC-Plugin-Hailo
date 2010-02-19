@@ -29,4 +29,4 @@ resources:
   homepage: http://search.cpan.org/dist/POE-Component-IRC-Plugin-Hailo
   license: http://dev.perl.org/licenses/
   repository: git://github.com/hinrik/poe-component-irc-plugin-hailo.git
-version: 0.06
+version: 0.07
