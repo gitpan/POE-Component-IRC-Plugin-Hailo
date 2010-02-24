@@ -6,7 +6,7 @@ use Getopt::Long qw(:config autohelp);
 use POE::Component::IRC::Common qw(l_irc strip_color strip_formatting irc_to_utf8);
 use Pod::Usage;
 
-my $VERSION = '0.07';
+my $VERSION = '0.08';
 
 GetOptions(
     'f|format=s'       => \(my $format = ''),
@@ -18,8 +18,8 @@ GetOptions(
 
 my ($privmsg, $action);
 if ($format eq 'pocoirc') {
-    $privmsg = qr/^\S+ \S+ <(\S+)> (.*)/;
-    $action = qr/^\S+ \S+ \* (.*)/;
+    $privmsg = qr/^(?:\S+ )?\S+ <(\S+)> (.*)/;
+    $action = qr/^(?:\S+ )?\S+ \* (.*)/;
 }
 elsif ($format eq 'irssi') {
     $privmsg = qr/^\S+\s+<.(\S+)> (.*)/;
@@ -34,8 +34,8 @@ binmode STDOUT, ':utf8';
 LINE: while (my $line = <STDIN>) {
     chomp $line;
 
-    # irssi's encoding might be inconsistent, convert everything to UTF-8
-    $line = irc_to_utf8($line) if $format eq 'irssi';
+    # decode cp1252/utf8 bytes to a text string
+    $line = irc_to_utf8($line);
 
     $line = strip_color($line);
     $line = strip_formatting($line);
