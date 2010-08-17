@@ -1,3 +1,10 @@
+0.11  Tue Aug 17 22:54:06 GMT 2010
+    - Use Dist::Zilla
+    - Make all warnings fatal
+
+0.11
+    - Support a 'Channels' parameter to limit the bot's attention
+
 0.10 Sun Mar 14 10:13:15 GMT 2010
     - Support non-ASCII 'Own_channel' parameter
 

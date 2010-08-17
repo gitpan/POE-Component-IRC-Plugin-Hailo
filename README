@@ -24,8 +24,8 @@ SYNOPSIS
      $irc->plugin_add('Connector', POE::Component::IRC::Plugin::Connector->new());
      $irc->plugin_add('Hailo', POE::Component::IRC::Plugin::Hailo->new(
          Own_channel    => '#bot_chan',
-         Ignore_regexes => [ qr{^\s*\w+://\S+\s*$} ], # ignore URL-only lines
-         Hailo_args => {
+         Ignore_regexes => [ qr{\w+://\w} ], # ignore lines containing URLs
+         Hailo_args     => {
              brain_resource => 'brain.sqlite',
          },
      ));
@@ -65,6 +65,10 @@ METHODS
 
     'Hailo_args', a hash reference containing arguments to pass to the
     constructor of a new Hailo object.
+
+    'Channels', an array reference of channel names. If this is provided,
+    the bot will only listen/respond the specified channels, rather than all
+    channels (can be overridden with 'Own_channel').
 
     'Own_channel', a channel where it will reply to all messages. The plugin
     will take care of joining the channel. It will part from it when the
