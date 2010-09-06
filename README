@@ -67,8 +67,8 @@ METHODS
     constructor of a new Hailo object.
 
     'Channels', an array reference of channel names. If this is provided,
-    the bot will only listen/respond the specified channels, rather than all
-    channels (can be overridden with 'Own_channel').
+    the bot will only listen/respond in the specified channels, rather than
+    all channels.
 
     'Own_channel', a channel where it will reply to all messages. The plugin
     will take care of joining the channel. It will part from it when the

@@ -6,7 +6,6 @@ META.json
 META.yml
 Makefile.PL
 README
-README.pod
 bin/irchailo-seed
 dist.ini
 lib/POE/Component/IRC/Plugin/Hailo.pm
