@@ -3,7 +3,7 @@ BEGIN {
   $POE::Component::IRC::Plugin::Hailo::AUTHORITY = 'cpan:HINRIK';
 }
 BEGIN {
-  $POE::Component::IRC::Plugin::Hailo::VERSION = '0.13';
+  $POE::Component::IRC::Plugin::Hailo::VERSION = '0.14';
 }
 
 use strict;
@@ -254,7 +254,7 @@ POE::Component::IRC::Plugin::Hailo - A PoCo-IRC plugin which provides access to 
 To quickly get an IRC bot with this plugin up and running, you can use
 L<App::Pocoirc|App::Pocoirc>:
 
- $ pocoirc -s irc.perl.org -j '#bots' -p 'Hailo{ "brain_resource": "brain.sqlite" }'
+ $ pocoirc -s irc.perl.org -j '#bots' -a 'Hailo{ "brain_resource": "brain.sqlite" }'
 
 Or use it in your code:
 

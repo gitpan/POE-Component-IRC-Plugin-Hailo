@@ -6,7 +6,7 @@ SYNOPSIS
     To quickly get an IRC bot with this plugin up and running, you can use
     App::Pocoirc:
 
-     $ pocoirc -s irc.perl.org -j '#bots' -p 'Hailo{ "brain_resource": "brain.sqlite" }'
+     $ pocoirc -s irc.perl.org -j '#bots' -a 'Hailo{ "brain_resource": "brain.sqlite" }'
 
     Or use it in your code:
 
