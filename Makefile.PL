@@ -9,7 +9,7 @@ use ExtUtils::MakeMaker 6.31;
 
 
 my %WriteMakefileArgs = (
-  'ABSTRACT' => 'A PoCo-IRC plugin which provides access to a L<Hailo|Hailo> conversation simulator.',
+  'ABSTRACT' => 'A PoCo-IRC plugin which provides access to a Hailo conversation simulator.',
   'AUTHOR' => 'Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>',
   'BUILD_REQUIRES' => {
     'Test::Script' => '1.07'
@@ -24,10 +24,11 @@ my %WriteMakefileArgs = (
   'LICENSE' => 'perl',
   'NAME' => 'POE::Component::IRC::Plugin::Hailo',
   'PREREQ_PM' => {
+    'IRC::Utils' => '0.05',
     'POE::Component::Hailo' => '0',
     'POE::Component::IRC' => '6.22'
   },
-  'VERSION' => '0.14',
+  'VERSION' => '0.15',
   'test' => {
     'TESTS' => 't/*.t'
   }

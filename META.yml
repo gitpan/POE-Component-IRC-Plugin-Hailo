@@ -1,5 +1,5 @@
 ---
-abstract: 'A PoCo-IRC plugin which provides access to a L<Hailo|Hailo> conversation simulator.'
+abstract: 'A PoCo-IRC plugin which provides access to a Hailo conversation simulator.'
 author:
   - 'Hinrik Örn Sigurðsson <hinrik.sig@gmail.com>'
 build_requires:
@@ -7,7 +7,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.31
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.101612, CPAN::Meta::Converter version 2.101670'
+generated_by: 'Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.110440'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -19,6 +19,7 @@ no_index:
     - xt
     - utils
 requires:
+  IRC::Utils: 0.05
   POE::Component::Hailo: 0
   POE::Component::IRC: 6.22
 resources:
@@ -26,5 +27,5 @@ resources:
   homepage: http://search.cpan.org/dist/POE-Component-IRC-Plugin-Hailo/
   license: http://dev.perl.org/licenses/
   repository: git://github.com/hinrik/poe-component-irc-plugin-hailo.git
-version: 0.14
+version: 0.15
 x_authority: cpan:HINRIK

@@ -1,10 +1,10 @@
 {
-   "abstract" : "A PoCo-IRC plugin which provides access to a L<Hailo|Hailo> conversation simulator.",
+   "abstract" : "A PoCo-IRC plugin which provides access to a Hailo conversation simulator.",
    "author" : [
       "Hinrik \u00c3\u0096rn Sigur\u00c3\u00b0sson <hinrik.sig@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.101612, CPAN::Meta::Converter version 2.101670",
+   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.110440",
    "license" : [
       "perl_5"
    ],
@@ -33,6 +33,7 @@
       },
       "runtime" : {
          "requires" : {
+            "IRC::Utils" : "0.05",
             "POE::Component::Hailo" : 0,
             "POE::Component::IRC" : "6.22"
          }
@@ -54,7 +55,7 @@
          "web" : "http://github.com/hinrik/poe-component-irc-plugin-hailo"
       }
    },
-   "version" : "0.14",
+   "version" : "0.15",
    "x_authority" : "cpan:HINRIK"
 }
 

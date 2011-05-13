@@ -3,17 +3,17 @@ BEGIN {
   $POE::Component::IRC::Plugin::Hailo::AUTHORITY = 'cpan:HINRIK';
 }
 BEGIN {
-  $POE::Component::IRC::Plugin::Hailo::VERSION = '0.14';
+  $POE::Component::IRC::Plugin::Hailo::VERSION = '0.15';
 }
 
 use strict;
 use warnings FATAL => 'all';
 use Carp;
 use Encode qw(encode_utf8 is_utf8);
+use IRC::Utils qw(lc_irc matches_mask_array decode_irc strip_color strip_formatting);
 use List::Util qw(first);
 use POE;
 use POE::Component::Hailo;
-use POE::Component::IRC::Common qw(l_irc matches_mask_array irc_to_utf8 strip_color strip_formatting);
 use POE::Component::IRC::Plugin qw(PCI_EAT_NONE);
 
 sub new {
@@ -86,9 +86,14 @@ sub hailo_learn_replied {
     my ($self, $args, $context) = @_[OBJECT, ARG0, ARG1];
     my $reply = shift @$args;
     $reply = "I don't know enough to answer you yet." if !defined $reply;
-    
+
     my $bytes = encode_utf8($reply);
-    $self->{irc}->yield($self->{Method} => $context->{_target}, $bytes);
+    if ($bytes =~ s/^\x01 //) {
+        $self->{irc}->yield('ctcp', $context->{_target}, "ACTION $bytes");
+    }
+    else {
+        $self->{irc}->yield($self->{Method}, $context->{_target}, $bytes);
+    }
     return;
 }
 
@@ -100,7 +105,7 @@ sub _ignoring_channel {
     if ($self->{Channels}) {
         return 1 if !first {
             my $c = $chan;
-            $c = irc_to_utf8($c) if is_utf8($_);
+            $c = decode_irc($c) if is_utf8($_);
             $_ eq $c
         } @{ $self->{Channels} };
     }
@@ -109,7 +114,7 @@ sub _ignoring_channel {
 
 sub _ignoring_user {
     my ($self, $user) = @_;
-    
+
     if ($self->{Ignore_masks}) {
         my $mapping = $self->{irc}->isupport('CASEMAPPING');
         return 1 if keys %{ matches_mask_array($self->{Ignore_masks}, [$user], $mapping) };
@@ -160,7 +165,7 @@ sub _msg_handler {
         $self->{Hailo}->session_id(),
         $event,
         [$what],
-        {_target => $chan },
+        { _target => $chan },
     );
 
     return;
@@ -168,10 +173,10 @@ sub _msg_handler {
 
 sub _is_own_channel {
     my $self = shift;
-    my $chan = l_irc(shift);
-    my $own  = l_irc($self->{Own_channel});
+    my $chan = lc_irc(shift);
+    my $own  = lc_irc($self->{Own_channel});
 
-    $chan = irc_to_utf8($chan) if is_utf8($own);
+    $chan = decode_irc($chan) if is_utf8($own);
     return 1 if $chan eq $own;
     return;
 }
@@ -179,7 +184,7 @@ sub _is_own_channel {
 sub _normalize_irc {
     my ($line) = @_;
 
-    $line = irc_to_utf8($line);
+    $line = decode_irc($line);
     $line = strip_color($line);
     $line = strip_formatting($line);
     return $line;
@@ -192,7 +197,7 @@ sub brain {
 
 sub transplant {
     my ($self, $brain) = @_;
-    
+
     if (ref $brain ne 'POE::Component::Hailo') {
         croak 'Argument must be a POE::Component::Hailo instance';
     }
@@ -213,21 +218,21 @@ sub S_isupport {
 sub S_ctcp_action {
     my ($self, $irc) = splice @_, 0, 2;
     my $user         = ${ $_[0] };
-    my $nick         = (split /!/, $user)[0];
     my $chan         = ${ $_[1] }->[0];
     my $what         = ${ $_[2] };
+    my $chantypes    = join('', @{ $irc->isupport('CHANTYPES') || ['#', '&']});
 
-    return PCI_EAT_NONE if $chan !~ /^[#&!]/;
-    
+    return PCI_EAT_NONE if $chan !~ /^[$chantypes]/;
+
     $poe_kernel->post(
         $self->{session_id},
         '_msg_handler',
         'action',
-        $user, 
+        $user,
         $chan,
-        "$nick $what",
-    ); 
-    
+        "\x01 $what",
+    );
+
     return PCI_EAT_NONE;
 }
 
@@ -247,7 +252,7 @@ sub S_public {
 
 =head1 NAME
 
-POE::Component::IRC::Plugin::Hailo - A PoCo-IRC plugin which provides access to a L<Hailo|Hailo> conversation simulator.
+POE::Component::IRC::Plugin::Hailo - A PoCo-IRC plugin which provides access to a Hailo conversation simulator.
 
 =head1 SYNOPSIS
 
@@ -281,6 +286,9 @@ situations, see L<C<new>|/"new">). An example:
  <Other> hello there
  <Someone> hailo_bot: hi
  <hailo_bot> oh hi there
+
+It will occasionally send CTCP ACTIONS (/me) too, if the reply in question
+happens to be based on an earlier CTCP ACTION from someone.
 
 All NOTICEs are ignored, so if your other bots only issue NOTICEs like
 they should, they will be ignored automatically.
