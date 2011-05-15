@@ -28,7 +28,7 @@ my %WriteMakefileArgs = (
     'POE::Component::Hailo' => '0',
     'POE::Component::IRC' => '6.22'
   },
-  'VERSION' => '0.15',
+  'VERSION' => '0.16',
   'test' => {
     'TESTS' => 't/*.t'
   }

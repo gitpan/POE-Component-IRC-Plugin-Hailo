@@ -55,7 +55,7 @@
          "web" : "http://github.com/hinrik/poe-component-irc-plugin-hailo"
       }
    },
-   "version" : "0.15",
+   "version" : "0.16",
    "x_authority" : "cpan:HINRIK"
 }
 
