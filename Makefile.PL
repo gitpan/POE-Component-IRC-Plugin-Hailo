@@ -4,7 +4,7 @@ use warnings;
 
 
 
-use ExtUtils::MakeMaker 6.31;
+use ExtUtils::MakeMaker 6.30;
 
 
 
@@ -15,7 +15,7 @@ my %WriteMakefileArgs = (
     'Test::Script' => '1.07'
   },
   'CONFIGURE_REQUIRES' => {
-    'ExtUtils::MakeMaker' => '6.31'
+    'ExtUtils::MakeMaker' => '6.30'
   },
   'DISTNAME' => 'POE-Component-IRC-Plugin-Hailo',
   'EXE_FILES' => [
@@ -25,10 +25,11 @@ my %WriteMakefileArgs = (
   'NAME' => 'POE::Component::IRC::Plugin::Hailo',
   'PREREQ_PM' => {
     'IRC::Utils' => '0.05',
+    'Math::Random::OO' => '0.21',
     'POE::Component::Hailo' => '0',
     'POE::Component::IRC' => '6.22'
   },
-  'VERSION' => '0.16',
+  'VERSION' => '0.17',
   'test' => {
     'TESTS' => 't/*.t'
   }

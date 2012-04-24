@@ -3,7 +3,7 @@ BEGIN {
   $POE::Component::IRC::Plugin::Hailo::AUTHORITY = 'cpan:HINRIK';
 }
 BEGIN {
-  $POE::Component::IRC::Plugin::Hailo::VERSION = '0.16';
+  $POE::Component::IRC::Plugin::Hailo::VERSION = '0.17';
 }
 
 use strict;
@@ -15,6 +15,7 @@ use List::Util qw(first);
 use POE;
 use POE::Component::Hailo;
 use POE::Component::IRC::Plugin qw(PCI_EAT_NONE);
+use Math::Random::OO::UniformInt;
 
 sub new {
     my ($package, %args) = @_;
@@ -32,6 +33,10 @@ sub new {
     $self->{Method} = 'notice' if !defined $self->{Method} || $self->{Method} !~ /privmsg|notice/;
     $self->{abusers} = { };
     $self->{Abuse_interval} = 60 if !defined $self->{Abuse_interval};
+
+    if ($self->{Replyrate}) {
+        $self->{unirng} = Math::Random::OO::UniformInt->new(99);
+    }
 
     return $self;
 }
@@ -146,7 +151,8 @@ sub _msg_handler {
     my $event = 'learn';
     if ($self->{Own_channel} && $self->_is_own_channel($chan)
         || $type eq 'public' && $what =~ s/^\s*\Q$nick\E[:,;.!?~]?\s//i
-        || $self->{Talkative} && $what =~ /\Q$nick/i)
+        || $self->{Talkative} && $what =~ /\Q$nick/i
+        || $self->{Replyrate} && $self->_reply_randomly())
     {
         $event = 'learn_reply';
     }
@@ -179,6 +185,11 @@ sub _is_own_channel {
     $chan = decode_irc($chan) if is_utf8($own);
     return 1 if $chan eq $own;
     return;
+}
+
+sub _reply_randomly {
+    my $self = shift;
+    return $self->{unirng}->next < $self->{Replyrate};
 }
 
 sub _normalize_irc {
@@ -340,6 +351,10 @@ URLs in them.
 
 B<'Method'>, how you want messages to be delivered. Valid options are
 'notice' (the default) and 'privmsg'.
+
+B<'Replyrate'>, when set to a number (a percentage, C<0> to C<100>)
+controls how often the bot will respond to any message. Uses a uniform RNG
+and fires whenever the random roll is less than this number.
 
 Returns a plugin object suitable for feeding to
 L<POE::Component::IRC|POE::Component::IRC>'s C<plugin_add> method.

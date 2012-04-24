@@ -84,6 +84,10 @@ METHODS
     'Method', how you want messages to be delivered. Valid options are
     'notice' (the default) and 'privmsg'.
 
+    'Replyrate', when set to a number (a percentage, 0 to 100) controls how
+    often the bot will respond to any message. Uses a uniform RNG and fires
+    whenever the random roll is less than this number.
+
     Returns a plugin object suitable for feeding to POE::Component::IRC's
     "plugin_add" method.
 

@@ -5,9 +5,9 @@ author:
 build_requires:
   Test::Script: 1.07
 configure_requires:
-  ExtUtils::MakeMaker: 6.31
+  ExtUtils::MakeMaker: 6.30
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.110440'
+generated_by: 'Dist::Zilla version 4.200006, CPAN::Meta::Converter version 2.110440'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -20,12 +20,13 @@ no_index:
     - utils
 requires:
   IRC::Utils: 0.05
+  Math::Random::OO: 0.21
   POE::Component::Hailo: 0
   POE::Component::IRC: 6.22
 resources:
   bugtracker: https://rt.cpan.org/Public/Dist/Display.html?Name=POE-Component-IRC-Plugin-Hailo
-  homepage: http://search.cpan.org/dist/POE-Component-IRC-Plugin-Hailo/
+  homepage: http://metacpan.org/release/POE-Component-IRC-Plugin-Hailo
   license: http://dev.perl.org/licenses/
   repository: git://github.com/hinrik/poe-component-irc-plugin-hailo.git
-version: 0.16
+version: 0.17
 x_authority: cpan:HINRIK
