@@ -2,8 +2,8 @@ package POE::Component::IRC::Plugin::Hailo;
 BEGIN {
   $POE::Component::IRC::Plugin::Hailo::AUTHORITY = 'cpan:HINRIK';
 }
-BEGIN {
-  $POE::Component::IRC::Plugin::Hailo::VERSION = '0.17';
+{
+  $POE::Component::IRC::Plugin::Hailo::VERSION = '0.18';
 }
 
 use strict;
